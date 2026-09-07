@@ -1,0 +1,6 @@
+$FsdAppName = "FSD Downloader"
+$FsdCommandName = "fsd"
+$FsdVersion = "1.0.0"
+$FsdAssetName = "fsd-downloader-v$FsdVersion-windows-x64.zip"
+$FsdReleaseBaseUrl = ""
+$FsdInstallRoot = Join-Path $env:LOCALAPPDATA "Programs\FSD Downloader"
