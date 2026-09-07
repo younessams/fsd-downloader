@@ -38,4 +38,13 @@ def configured_js_runtime() -> dict[str, dict[str, str]] | None:
     deno_path = os.environ.get("FSD_DENO_PATH")
     if deno_path:
         return {"deno": {"path": str(Path(deno_path))}}
+
+    node = bundled_tool_path("node.exe" if os.name == "nt" else "node")
+    if node:
+        return {"node": {"path": str(node)}}
+
+    node_path = os.environ.get("FSD_NODE_PATH")
+    if node_path:
+        return {"node": {"path": str(Path(node_path))}}
+
     return None
