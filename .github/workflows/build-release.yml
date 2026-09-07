@@ -1,0 +1,50 @@
+name: Build Windows Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout v1.0.0
+        uses: actions/checkout@v4
+        with:
+          ref: v1.0.0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install FFmpeg
+        shell: powershell
+        run: |
+          choco install ffmpeg -y --no-progress
+          ffmpeg -version
+
+      - name: Build FSD Downloader
+        shell: powershell
+        run: |
+          .\build-windows.ps1
+
+      - name: Verify release files
+        shell: powershell
+        run: |
+          Get-ChildItem .\release
+          Get-FileHash .\release\fsd-downloader-v1.0.0-windows-x64.zip -Algorithm SHA256
+          Get-Content .\release\SHA256SUMS.txt
+
+      - name: Upload assets to GitHub Release
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.0 `
+            ".\release\fsd-downloader-v1.0.0-windows-x64.zip" `
+            ".\release\SHA256SUMS.txt" `
+            --clobber
