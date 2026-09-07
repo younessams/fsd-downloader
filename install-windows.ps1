@@ -9,14 +9,22 @@ $ErrorActionPreference = "Stop"
 try {
     $FsdAppName = "FSD Downloader"
     $FsdCommandName = "fsd"
+    $FsdOwner = "younessams"
+    $FsdRepo = "fsd-downloader"
     $FsdVersion = "1.0.0"
+    $FsdTag = "v$FsdVersion"
     $FsdAssetName = "fsd-downloader-v$FsdVersion-windows-x64.zip"
-    $FsdReleaseBaseUrl = ""
+    $FsdChecksumAssetName = "SHA256SUMS.txt"
+    $FsdReleaseBaseUrl = "https://github.com/$FsdOwner/$FsdRepo/releases/download/$FsdTag"
+    $FsdAssetUrl = "$FsdReleaseBaseUrl/$FsdAssetName"
+    $FsdChecksumUrl = "$FsdReleaseBaseUrl/$FsdChecksumAssetName"
     $FsdInstallRoot = Join-Path $env:LOCALAPPDATA "Programs\FSD Downloader"
 
-    $configPath = Join-Path $PSScriptRoot "release-config.ps1"
-    if ($PSScriptRoot -and (Test-Path -LiteralPath $configPath)) {
-        . $configPath
+    if ($PSScriptRoot) {
+        $configPath = Join-Path $PSScriptRoot "release-config.ps1"
+        if (Test-Path -LiteralPath $configPath) {
+            . $configPath
+        }
     }
     if (-not $InstallRoot) {
         $InstallRoot = $FsdInstallRoot
@@ -36,10 +44,10 @@ try {
             throw "Release URL is not configured yet. Provide -BundlePath for local installation tests."
         }
         $BundlePath = Join-Path $tempRoot $FsdAssetName
-        Invoke-WebRequest -Uri "$FsdReleaseBaseUrl/$FsdAssetName" -OutFile $BundlePath
+        Invoke-WebRequest -Uri $FsdAssetUrl -OutFile $BundlePath
         if (-not $ChecksumPath) {
-            $ChecksumPath = Join-Path $tempRoot "SHA256SUMS.txt"
-            Invoke-WebRequest -Uri "$FsdReleaseBaseUrl/SHA256SUMS.txt" -OutFile $ChecksumPath
+            $ChecksumPath = Join-Path $tempRoot $FsdChecksumAssetName
+            Invoke-WebRequest -Uri $FsdChecksumUrl -OutFile $ChecksumPath
         }
     }
 

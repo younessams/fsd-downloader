@@ -52,13 +52,18 @@ Debug logs are written to:
 
 ## Windows Installation
 
-A public GitHub Release has not been created yet. When the repository and release assets exist, the installer command will use this placeholder shape:
+A public GitHub Release has not been created yet. After the v1.0.0 release assets are published, users can install with:
 
 ```powershell
-irm <FSD_DOWNLOADER_INSTALLER_URL> | iex
+irm https://raw.githubusercontent.com/younessams/fsd-downloader/main/install-windows.ps1 | iex
 ```
 
 The public one-command installer script is `install-windows.ps1`.
+
+The command above requires the v1.0.0 GitHub Release assets to exist:
+
+- `fsd-downloader-v1.0.0-windows-x64.zip`
+- `SHA256SUMS.txt`
 
 The release installer is designed to install into:
 
@@ -70,6 +75,14 @@ It exposes the command:
 
 ```powershell
 fsd
+```
+
+Then run:
+
+```powershell
+fsd
+fsd --help
+fsd --version
 ```
 
 The standalone Windows build does not require users to install Python, pip, yt-dlp, Rich, FFmpeg, ffprobe, or Deno globally.
